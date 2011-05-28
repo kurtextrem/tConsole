@@ -4,7 +4,7 @@
  * @author kurtextrem <kurtextrem@gmail.com>
  * @license CC BY-SA http://creativecommons.org/licenses/by-sa/3.0/
  * @copyright 2011-XXXX
- * @version 0.3
+ * @version 0.4
  * @jquery <= 1.6.1
  *
  */
@@ -25,15 +25,12 @@
 			"url": "cmds.php?cmd=",
 			"title": location.href,
 			"json": true
-		}
+		};
 		var tpl = {
 			"engine": appname+" [Version "+(0|Math.random()*10)+"."+(0|Math.random()*10)+"."+(0|Math.random()*10000)+"]", // this is eq. to Math.floor
 			"copyright": "Copyright (c) "+new Date().getFullYear()+" "+settings.name+". All rights served.",
 			"header": '<header><div id="appname"></div><div id="copyright"></div></header>',
-			"body": '<div class="input"><span class="path"></span><span class="command"></span><span id="cursor">_</span></div>',
-			"shift": {
-				"a": "A",
-			}
+			"body": '<div class="input"><span class="path"></span><span class="command"></span><span id="cursor">_</span></div>'
 		};
 
 		if(templates) // extends the default object with user input
@@ -62,12 +59,13 @@
 				}
 			}
 		}).keydown(function(e){
-			if(e.which == 13)
-				if(settings.json)
-					$.getJSON(settings.url+$('.command').last().text().replace(/\s/, '%20'), function(json){
-						cursor_idle = true;
+			if(e.which == 13){
+				cursor_idle = true;
+				var cmd = $('.command').last().text().replace(/\s/, '%20');
+				if(settings.json && $.trim($('.command').last().text()) != ''){
+					$.getJSON(settings.url+cmd, function(json){
 
-						if(json.answer && $.trim($('.command').last().text()) != '')
+						if(json.answer)
 							$('.command').last().after('<div class="answer">'+json.answer+'</div>');
 
 						$('#cursor').remove();
@@ -79,6 +77,20 @@
 
 						cursor_idle = false;
 					});
+				}else if($.trim($('.command').last().text()) != ''){
+					$.get(settings.url+cmd, function(script){
+						eval(script);
+
+						cursor_idle = false;
+					});
+				}else{
+					$('#cursor').remove();
+					$this.append(tpl.body);
+					$('.path').last().text(location.hostname+'>');
+
+					cursor_idle = false;
+				}
+			}
 			if(e.which == 8){
 				var command = $('.command').last();
 				command.text(command.text().substr(0, command.text().length-1));
