@@ -1,0 +1,31 @@
+/*
+    Document   : console
+    Created on : 27.05.2011, 20:12:28
+    Author     : kurtextrem <kurtextrem@gmail.com>
+    Description:
+        Make it all a console.
+*/
+
+body{
+	font-family: 'Lucida Console', 'Consolas', 'Inconsolata';
+	color: rgb(192, 192, 192);
+	background-color: black;
+	font-size: 14px;
+	cursor: default;
+}
+
+/* I could use margin, but I don't like ... */
+#console > header:after{
+	content: '.';
+	color: black;
+}
+
+.path, .command{
+	float: left;
+}
+
+.answer{
+	clear: both;
+}
+
+
