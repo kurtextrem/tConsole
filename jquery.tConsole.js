@@ -4,7 +4,7 @@
  * @author kurtextrem <kurtextrem@gmail.com>
  * @license CC BY-SA http://creativecommons.org/licenses/by-sa/3.0/
  * @copyright 2011-XXXX
- * @version 0.1
+ * @version 0.2
  * @jquery <= 1.6.1
  *
  */
@@ -52,16 +52,16 @@
 
 		$(document).keypress(function(event){
 			if(!cursor_idle){
-				if(event.keyCode > 46 && event.keyCode < 222){
-					var key = String.fromCharCode(event.keyCode);
+				if(event.which > 46 && event.which < 222){
+					var key = String.fromCharCode(event.which);
 					if(!event.shiftKey)
 						key = key.toLowerCase();
-						$('.command').last().append(key);
+					$('.command').last().append(key);
 					event.preventDefault();
 				}
 			}
 		}).keydown(function(e){
-			if(e.keyCode == 13)
+			if(e.which == 13)
 				if(settings.json)
 					$.getJSON(settings.url+$('.command').last().text().replace(/\s/, '%20'), function(json){
 						cursor_idle = true;
@@ -77,14 +77,14 @@
 
 						cursor_idle = false;
 					});
-			if(e.keyCode == 8){
+			if(e.which == 8){
 				var command = $('.command').last();
 				command.text(command.text().substr(0, command.text().length-1));
 				e.preventDefault();
 			}
-			if(e.keyCode == 9)
+			if(e.which == 9)
 				e.preventDefault();
-			if(e.keyCode == 32){
+			if(e.which == 32){
 				$('.command').last().append('&nbsp;');
 				e.preventDefault();
 			}
