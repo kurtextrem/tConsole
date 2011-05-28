@@ -21,9 +21,7 @@ $commands = array(
 
 $cmd = urldecode($_GET['cmd']);
 $cmd = trim($cmd);
-//$cmd = preg_replace('/\s/', '', $cmd);
-//$cmd = str_replace('Â', '', $cmd); // i dunno where it comes from...
-//var_dump($cmd);
+
 if(isset($commands[$cmd])){
 	echo json_encode($commands[$_GET['cmd']]);
 }else{

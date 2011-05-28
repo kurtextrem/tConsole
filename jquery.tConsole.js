@@ -80,6 +80,7 @@
 			if(e.keyCode == 8){
 				var command = $('.command').last();
 				command.text(command.text().substr(0, command.text().length-1));
+				e.preventDefault();
 			}
 			if(e.keyCode == 9)
 				e.preventDefault();
