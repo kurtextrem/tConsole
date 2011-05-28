@@ -1,18 +1,18 @@
 tConsole - tinyConsole
 ========================
-This is a jQuery Plugin. Works great with jQuery 1.6.1.
-Minified with [UglifyJS](http://marijnhaverbeke.nl/uglifyjs)
-A demo is available [here](http://kurtextrem.tk/console).
-Files needed: jquery.tConsole(.min).js
+This is a jQuery Plugin. Works great with jQuery 1.6.1.<br>
+Minified with [UglifyJS](http://marijnhaverbeke.nl/uglifyjs)<br>
+A demo is available [here](http://kurtextrem.tk/console).<br>
+Files needed: jquery.tConsole(.min).js<br>
 Files you should use: console.css, cmds.php
 
 Howto use
 ---------
-First setup a div or something else (I prefer section, cause of HTML5 :)
-`<div id="console"></div>`
-Then call tConsole.
-`<script>$(document).ready(function(){ $('#console').tConsole(); });</script>`
-Finished, that was easy, right?
+First setup a div or something else (I prefer section, cause of HTML5 :)<br>
+`<div id="console"></div>`<br>
+Then call tConsole.<br>
+`<script>$(document).ready(function(){ $('#console').tConsole(); });</script>`<br>
+Finished, that was easy, right?<br>
 
 What about commands?
 --------------------
@@ -20,15 +20,15 @@ You have to setup them serverside. Look at `cmds.php` for example php code.
 
 Customize
 ---------
-tConsole(settings, templates)
-Settings are
+tConsole(settings, templates)<br>
+Settings are<br>
 `{
 	"name": "<insert your whatever here>",
 	"url": "cmds.php?cmd=",
 	"title": location.href,
 	"json": true
-}`. `.tConsole({name: "moepmoep"})` would change the name after copyright to "moepmoep", try to play around with them!
-Templates are
+}`. `.tConsole({name: "moepmoep"})` would change the name after copyright to "moepmoep", try to play around with them!<br>
+Templates are<br>
 `{
 	"engine": appname+" [Version "+(0|Math.random()*10)+"."+(0|Math.random()*10)+"."+(0|Math.random()*10000)+"]", // this is eq. to Math.floor
 	"copyright": "Copyright (c) "+new Date().getFullYear()+" "+settings.name+". All rights served.",
@@ -38,8 +38,8 @@ Templates are
 
 Aww... I think Windows is not my type... I like the Unix Console more!
 ----------------------------------------------------------------------
-Aww, crap. Use [this](https://github.com/Evil-Code/UCE) one.
-
-More coming soon!
-
+Aww, crap. Use [this](https://github.com/Evil-Code/UCE) one.<br>
+<br>
+More coming soon!<br>
+<br>
 Youre Kurtextrem.
