@@ -1,7 +1,5 @@
 <?php
 
-$version = 0.3;
-
 $commands = array( // extend your commands here
 	"hello world" => array(
 		"answer" => "I'm a console, not a world -.-''",
@@ -20,7 +18,7 @@ $commands = array( // extend your commands here
 		"handle" => "$('body').css('color', 'blue'); $('#path').last().text('_MaX_>');"
 	),
 	"version" => array(
-		"answer" => "Wait... I have a version number? D:<br>Ok ok, my version is ".$version,
+		"answer" => "Wait... I have a version number? D:<br>Srsly I don't know my version...",
 		"handle" => ""
 	)
 );
