@@ -27,14 +27,14 @@ Settings are<br>
 	"url": "cmds.php?cmd=",
 	"title": location.href,
 	"json": true
-}`. `.tConsole({name: "moepmoep"})` would change the name after copyright to "moepmoep", try to play around with them!<br>
+}`.<br>`.tConsole({name: "moepmoep"})` would change the name after copyright to "moepmoep", try to play around with them!<br>
 Templates are<br>
 `{
 	"engine": appname+" [Version "+(0|Math.random()*10)+"."+(0|Math.random()*10)+"."+(0|Math.random()*10000)+"]", // this is eq. to Math.floor
 	"copyright": "Copyright (c) "+new Date().getFullYear()+" "+settings.name+". All rights served.",
 	"header": '<header><div id="appname"></div><div id="copyright"></div></header>',
 	"body": '<div class="input"><span class="path"></span><span class="command"></span><span id="cursor">_</span></div>'
-}`. Play around, if you know, what are u doing.
+}`.<br>Play around, if you know, what are u doing.
 
 Aww... I think Windows is not my type... I like the Unix Console more!
 ----------------------------------------------------------------------
