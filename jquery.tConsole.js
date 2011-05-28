@@ -4,7 +4,7 @@
  * @author kurtextrem <kurtextrem@gmail.com>
  * @license CC BY-SA http://creativecommons.org/licenses/by-sa/3.0/
  * @copyright 2011-XXXX
- * @version 0.2
+ * @version 0.3
  * @jquery <= 1.6.1
  *
  */
@@ -29,7 +29,8 @@
 		var tpl = {
 			"engine": appname+" [Version "+(0|Math.random()*10)+"."+(0|Math.random()*10)+"."+(0|Math.random()*10000)+"]", // this is eq. to Math.floor
 			"copyright": "Copyright (c) "+new Date().getFullYear()+" "+settings.name+". All rights served.",
-			"html": '<header><div id="appname"></div><div id="copyright"></div></header><div class="path"></div><div class="command"></div><div id="cursor">_</div>',
+			"header": '<header><div id="appname"></div><div id="copyright"></div></header>',
+			"body": '<div class="input"><span class="path"></span><span class="command"></span><span id="cursor">_</span></div>',
 			"shift": {
 				"a": "A",
 			}
@@ -38,7 +39,7 @@
 		if(templates) // extends the default object with user input
 			$.extend(tpl, templates);
 
-		this.html(tpl.html);
+		this.html(tpl.header+tpl.body);
 		$('#appname').text(tpl.engine);
 		$('#copyright').text(tpl.copyright);
 		$('.path').last().text(location.hostname+'>');
@@ -66,11 +67,12 @@
 					$.getJSON(settings.url+$('.command').last().text().replace(/\s/, '%20'), function(json){
 						cursor_idle = true;
 
-						if(json.answer)
+						if(json.answer && $.trim($('.command').last().text()) != '')
 							$('.command').last().after('<div class="answer">'+json.answer+'</div>');
 
 						$('#cursor').remove();
-						$this.append('<div class="path">'+location.hostname+'&gt;</div><div class="command"></div><div id="cursor">_</div>');
+						$this.append(tpl.body);
+						$('.path').last().text(location.hostname+'>');
 
 						if(json.handle != "")
 							eval(json.handle);
