@@ -42,4 +42,4 @@ Aww, crap. Use [this](https://github.com/Evil-Code/UCE) one.<br>
 <br>
 More coming soon!<br>
 <br>
-Youre Kurtextrem.
+Your Kurtextrem.
