@@ -1,109 +1,167 @@
 /**
- * A jQuery Console Script.
+ * A simple jQuery Console Script.
  *
- * @author kurtextrem <kurtextrem@gmail.com>
- * @license CC BY-SA http://creativecommons.org/licenses/by-sa/3.0/
- * @copyright 2011-XXXX
- * @version 0.4
- * @jquery <= 1.6.1
+ * @author	kurtextrem <kurtextrem@gmail.com>
+ * @license	LGPL
+ * @copyright	2012
+ * @version	1.0
+ * @jquery	>= 1.6.1
  *
  */
-(function($){
-	cursor_idle = false;
 
-	$.fn.tConsole = function(options, templates, appname){
-		$this = this;
+!function($){
+	"use strict"
 
-		if(options) // its needed here because of the templates
-			$.extend(settings, options);
+	var tConsole = {
+		$this: 0,
 
-		if(!appname)
-			appname = (navigator.userAgent.search(/chrome/i) == -1)?navigator.appName:'Google Chrome';
-
-		var settings = {
-			"name": "<insert your whatever here>",
-			"url": "cmds.php?cmd=",
-			"title": location.href,
-			"json": true
-		};
-		var tpl = {
-			"engine": appname+" [Version "+(0|Math.random()*10)+"."+(0|Math.random()*10)+"."+(0|Math.random()*10000)+"]", // this is eq. to Math.floor
-			"copyright": "Copyright (c) "+new Date().getFullYear()+" "+settings.name+". All rights served.",
-			"header": '<header><div id="appname"></div><div id="copyright"></div></header>',
-			"body": '<div class="input"><span class="path"></span><span class="command"></span><span id="cursor">_</span></div>'
-		};
-
-		if(templates) // extends the default object with user input
-			$.extend(tpl, templates);
-
-		this.html(tpl.header+tpl.body);
-		$('#appname').text(tpl.engine);
-		$('#copyright').text(tpl.copyright);
-		$('.path').last().text(location.hostname+'>');
-
-		window.title = settings.title;
-
-		window.setInterval(function(){
-			if(!cursor_idle)
-				$('#cursor').toggle();
-		}, 500);
-
-		$(document).keypress(function(event){
-			if(!cursor_idle){
-				if(event.which > 46 && event.which < 222){
-					var key = String.fromCharCode(event.which);
-					if(!event.shiftKey)
-						key = key.toLowerCase();
-					$('.command').last().append(key);
-					event.preventDefault();
+		main: function(options, templates){
+			var _this = this,		// the real "this"
+				$this = this.$this,	// the jquery object "this" -> the element where it's called from.. brainfuck
+				settings = {
+					vendor: 'kurtextrem',
+					commandUrl: 'cmds.php?cmd=',
+					year: new Date().getFullYear(),
+					appname: 'tConsole',
+					version: '1.0',
+					json: true
+				},
+				tpl = {
+					engine: '<span class="tConsole-appname"></span> [Version <span class="tConsole-version"></span>]',
+					copyright: 'Copyright (c) <span class="tConsole-year"></span> <span class="tConsole-vendor"></span>. All rights served.',
+					error: '<div class="tConsole-answer">Oups, the request\'s gone wrong! Please try again.</div>',
+					header: '<header><div class="tConsole-app"></div><div class="tConsole-copyright"></div></header>',
+					body: '<div class="tConsole-input"><span class="tConsole-path"></span><span class="tConsole-command"></span><span class="tConsole-cursor">_</span></div>'
 				}
-			}
-		}).keydown(function(e){
-			if(e.which == 13){
-				cursor_idle = true;
-				var cmd = $('.command').last().text().replace(/\s/, '%20');
-				if(settings.json && $.trim($('.command').last().text()) != ''){
-					$.getJSON(settings.url+cmd, function(json){
 
-						if(json.answer)
-							$('.command').last().after('<div class="answer">'+json.answer+'</div>');
+			if(options)
+				$.extend(settings, options)
 
-						$('#cursor').remove();
-						$this.append(tpl.body);
-						$('.path').last().text(location.hostname+'>');
+			if(templates) // extends the default object with user input
+				$.extend(tpl, templates)
 
-						if(json.handle != "")
-							eval(json.handle);
+			// we need to fill in the gaps
+			//$this.html('<div class="tConsole" unselectable="on" tabindex="1">'+tpl.header+tpl.body+'</div>')
+			$this.html('<div class="tConsole" tabindex="1">' + tpl.header + tpl.body + '</div>')
 
-						cursor_idle = false;
-					});
-				}else if($.trim($('.command').last().text()) != ''){
-					$.get(settings.url+cmd, function(script){
-						eval(script);
+			// change the parent to the real console element
+			$this = this.$this = $this.find('.tConsole')
 
-						cursor_idle = false;
-					});
-				}else{
-					$('#cursor').remove();
-					$this.append(tpl.body);
-					$('.path').last().text(location.hostname+'>');
+			// first fill in the templates
+			$this.find('.tConsole-app').html(tpl.engine)
+			$this.find('.tConsole-copyright').html(tpl.copyright)
 
-					cursor_idle = false;
+			// and then fill in the gaps again
+			$this.find('.tConsole-appname').text(settings.appname)
+			$this.find('.tConsole-path').last().text(location.hostname+'>')
+			$this.find('.tConsole-year').text(settings.year)
+			$this.find('.tConsole-vendor').text(settings.vendor)
+			$this.find('.tConsole-version').text(settings.version)
+
+			// set the cursor blink interval
+			window.setInterval(function(){
+				if(!$this.data('cursor-idle'))
+					$this.find('.tConsole-cursor').toggle()
+				else
+					$this.find('.tConsole-cursor').hide()
+			}, 500)
+
+			$this.keypress(function(e){
+				if(!$this.data('cursor-idle')){
+					if(e.which > 46 && e.which < 253){
+						var key = String.fromCharCode(e.which)
+
+						if(!e.shiftKey)
+							key = key.toLowerCase()
+
+						$('.tConsole-command').last().append(key)
+
+						e.preventDefault()
+					}
 				}
-			}
-			if(e.which == 8){
-				var command = $('.command').last();
-				command.text(command.text().substr(0, command.text().length-1));
-				e.preventDefault();
-			}
-			if(e.which == 9)
-				e.preventDefault();
-			if(e.which == 32){
-				$('.command').last().append('&nbsp;');
-				e.preventDefault();
-			}
-		});
+			}).keydown(function(e){
+				var cmd = $('.tConsole-command').last().text()
+				var action = false
 
-		return;
-	};
-})( jQuery );
+				if(e.which == 13){
+					cmd = cmd.replace(/\s/, '%20')
+
+					_this.disableCursor()
+
+					if(settings.json && $.trim(cmd) !== '') {
+						$.ajax(settings.commandUrl+cmd, {
+							success: function(ret) {
+								var answer = ret
+
+								if(settings.json) {
+									ret = $.parseJSON(ret)
+									answer = ret.answer
+
+									if(ret.handle)
+										eval(ret.handle)
+								}
+
+								_this.newConsoleLine(answer, tpl.body)
+							},
+
+							error: function() {
+								_this.newConsoleLine(tpl.error, tpl.body)
+							}
+						})
+					} else if($.trim(cmd) === '') {
+						_this.newConsoleLine(0, tpl.body)
+					}
+					action = true
+				}
+
+				if(e.which === 8) {
+					$this.find('.tConsole-command').last().text(cmd.substr(0, cmd.length-1))
+					action = true
+				}
+
+				if(e.which === 32) {
+					$this.find('.tConsole-command').last().text(cmd+' ')
+					action = true
+				}
+
+				_this.enableCursor()
+
+				if(action)
+					e.preventDefault()
+			}).blur(function(){
+				_this.disableCursor()
+			}).focus(function(){
+				_this.enableCursor()
+			})
+
+			// if it's not focused you can't type
+			$this.focus()
+
+
+			// return the finalized console object which we've created :)
+			return $this
+		},
+
+		enableCursor: function() {
+			this.$this.data('cursor-idle', false)
+		},
+
+		disableCursor: function() {
+			this.$this.data('cursor-idle', true)
+		},
+
+		newConsoleLine: function(content, tpl) {
+			if (content)
+				this.$this.find('.tConsole-command').last().after('<div class="tConsole-answer">' + content + '</div>')
+			this.$this.find('.tConsole-cursor').remove()
+			this.$this.append(tpl)
+			this.$this.find('.tConsole-path').last().text(location.hostname+'>')
+		}
+	}
+
+	$.fn.tConsole = function(options, templates) {
+		this.tConsole = tConsole
+		this.tConsole.$this = this
+		this.tConsole.main(options, templates)
+	}
+}(jQuery)
